@@ -26,7 +26,7 @@
     "formidable": "^1.2.1",
     "helmet": "^3.21.2",
     "isomorphic-fetch": "^2.2.1",
-    "mongoose": "^5.4.7",
+    "mongoose": "^5.7.5",
     "next": "^7.0.3",
     "next-redux-wrapper": "^3.0.0-alpha.0",
     "nprogress": "^0.2.0",
