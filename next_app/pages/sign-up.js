@@ -1,0 +1,150 @@
+import React from "react";
+import { connect } from "react-redux";
+import {toastr} from 'react-redux-toastr'
+import Router from 'next/router'
+import * as user_actions from '../redux/actions/user_actions.js'
+import Signup_form from "../components/forms/Signup_Form.js";
+import Main_Layout from "../layouts/Main_Layout.js";
+import {ensure_not_loggedin} from '../components/utils/auth.js'
+
+const { register_success, register_attempt, set_user} = user_actions; 
+
+class Signup extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      errors: [],
+      email: "newUser@hive.com",
+      password: "hive",
+      confirm_password:'hive',
+      csrf:props.meta.csrf
+    };
+    this.handle_signup = this.handle_signup.bind(this)
+    this.handle_signup_resp = this.handle_signup_resp.bind(this)
+    this.handle_input = this.handle_input.bind(this)
+    
+  }
+
+  static async getInitialProps(ctx) {
+    ensure_not_loggedin(ctx)
+    let state = ctx.store.getState()
+
+    return {state}
+  }
+
+    componentDidMount(){
+
+    }
+
+
+  /* Get form input */
+  handle_input(input, type) {
+    this.setState({ [type]: input });
+
+  }
+
+  /* Handle FORM POST SIGNUP */
+  async handle_signup(data) {
+    //TODO start some spinner?
+    this.props.dispatch(register_attempt(data))
+    try {
+     
+      const _csrf = this.props.meta.csrf
+
+      const {email, password, confirm_password} = data
+      event.preventDefault();
+      let resp = await fetch('/auth/signup', {
+        method:'POST',
+        headers: {
+          "Content-Type": "application/json",
+          // "Content-Type": "application/x-www-form-urlencoded",
+      },
+        body:JSON.stringify({email, password, confirm_password, _csrf})
+      })
+      this.handle_signup_resp(resp);
+    } catch (err) {
+      //TOSO display error msg
+      console.log('err')
+      console.log(err)
+    }
+
+  }
+
+  /* Make a handler for signup resp */
+  /* Should we log in or show errors */
+  async handle_signup_resp(resp){
+    try {
+      let json = await resp.json()
+      if(json.errors &&json.errors.length){
+        console.log('WE GOT ERRORS')
+        json.errors.map(err => {
+          toastr.error('Error Message', `${err.msg}`)
+        })
+        // this.setState({
+        //   errors:json.errors.map(err => err)
+        // })
+      }else if(json.success && json.user){
+        //TODO notify login
+        //Push page?
+        this.props.dispatch(set_user(json.user));
+  
+        toastr.success('New User', `You are being logged in as ${this.state.email}`)
+        Router.push('/account-profile')
+  
+      }
+    } catch (err) {
+      console.log('err')
+      console.log(err)
+      //this means login failed
+      toastr.error('Error....')
+    }
+  }
+
+
+  render() {
+    // console.log(this.props)
+    return (
+      <Main_Layout className="container">
+
+        <div className="">
+          <br />
+
+          <div className="row mt-5 text-center">
+            <div className="col-md-6 offset-md-3">
+              <br />
+              <h1>Signup</h1>
+              <p className="lead mb-1">
+                Strat today!
+                <br />
+                Share with friends!
+              </p>
+
+            </div>
+          </div>
+
+          <div className="row mt-5 text-center">
+            <div className="col-md-10  offset-md-1">
+              <Signup_form
+                handle_input={this.handle_input}
+                handle_signup={this.handle_signup}
+                csrf={this.props.meta.csrf} 
+              />
+
+              <div className="row mt-5">
+                <div className="offset-sm-2 col-sm-8">
+                  <h3 className="action">
+                    Try us - <b className="embolden">it's free</b>.
+                  </h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Main_Layout>
+    );
+  }
+}
+function mapStateToProps(state) {
+  return  {...state} ;
+}
+export default connect(mapStateToProps)(Signup);

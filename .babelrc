@@ -1,0 +1,13 @@
+{
+  "plugins": [
+    ["styled-components", { "ssr": true }],
+    [
+      "inline-import",
+      {
+        "extensions": [".css"]
+      }
+    ]
+  ],
+  "presets": ["next/babel"],
+  "ignore": []
+}
