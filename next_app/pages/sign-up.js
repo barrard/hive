@@ -33,7 +33,7 @@ class Signup extends React.Component {
   }
 
     componentDidMount(){
-
+      console.log({csrf:this.props.meta.csrf})
     }
 
 
