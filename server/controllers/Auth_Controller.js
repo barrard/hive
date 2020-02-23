@@ -129,7 +129,8 @@ class Auth_Controller {
         req.session.save(()=>{
           return res.json({success: "You are now logged in", user })
 
-        })      });
+        })
+      });
 
     })(req, res, next);
   }

@@ -61,7 +61,7 @@ module.exports.upload_profile_imgs = async (req, res, next) => {
     logger.log("An error has occured: \n" + err);
   });
 
-  // once all the files have been uploaded, send a response to the client
+  // once all the files have been uploaded, send a response to the worker
   form.on("end", function() {
     logger.log("end");
     setTimeout(() => {}, 1000);

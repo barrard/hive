@@ -8,9 +8,11 @@ class Signup_Form extends React.Component {
     // console.log('THS IS Signup FORM')
     // console.log(props)
     this.state = {
-      email: "newUser@hive.com",
-      password: "hive",
-      confirm_password:'hive',
+
+      email: "hive@808.com",
+      password: "808",
+      confirm_password:'808',
+      csrf:props.csrf
     };
   }
 
@@ -94,11 +96,6 @@ class Signup_Form extends React.Component {
             </div>
           </div>
         </form>
-
-        <div className="col-sm-12 center-text">
-          <h3>Other login options</h3>
-        </div>
-        <Social_Buttons />
       </div>
     );
   }

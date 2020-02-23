@@ -16,7 +16,8 @@ const helper = require('./helper.js')
 module.exports = (app, next_app) => {
   const {auth_router} = require('../routes/Auth_Router.js')()
   const {user_router} = require('../routes/User_Router.js')()
-  const {hive_router} = require('../routes/Hive_Routes.js')()
+  const {worker_router} = require('../routes/Worker_Router.js')()
+  const {proposal_router} = require('../routes/Proposal_Router.js')()
 
   app.use(helmet());
   app.use(cors())
@@ -32,7 +33,7 @@ module.exports = (app, next_app) => {
       limit: "50mb"
     })
   );
-  
+
   /* DONT MOVE THIS!!!!!!  MUST STAY HERE NEXT TO BODY PARSER  FML */
       //Validation
 app.use(express_validator(
@@ -45,11 +46,11 @@ app.use(express_validator(
   })
 
   app.use(cookie_parser());
-  const mongo_store = new mongoStore({ url: "mongodb://localhost/qaltfi" });
+  const mongo_store = new mongoStore({ url: `mongodb://localhost/${process.env.PROJECT_NAME}` });
   const session_options = {
-    name:'Della_Session',
+    name: process.env.PROJECT_NAME,
     store: mongo_store,
-    secret: 'process.env.SESSION_SECRET',
+    secret: process.env.SESSION_SECRET,
     saveUninitialized: true,
     resave: true,
     cookie: {
@@ -62,7 +63,7 @@ app.use(express_validator(
     logger.log('SECURE COOKIE')
     session_options.cookie.secure = true;
   }
-    
+
 
   const session_middlesware = session(session_options);
   app.use(session_middlesware);
@@ -113,7 +114,7 @@ app.use((req, res, next) => {
   res.locals.PRODUCTION = process.env.NODE_ENV =="production"
   res.locals.BLOCKCHAIN_ENV = process.env.BLOCKCHAIN_ENV =="production"
   res.locals.API_SERVER = process.env.API_SERVER
-  
+
   res.locals.ETHERSCAN_URL = process.env.ETHERSCAN_URL
   res.locals.CURRENT_ETH_PRICE = 100 /* DATA.get('current_eth_price') || '0' */
   res.locals.csrf_token_function = req.csrfToken
@@ -132,14 +133,14 @@ app.use((req, res, next) => {
   let has_phone_token = req.session.has_phone_token
   if(has_email_token)res.locals.has_email_token = true
   if(has_phone_token)res.locals.has_phone_token = true
-  
+
 
   req.session.messages = []
   // logger.log(req.session.messages)
   next()
 });
 
-//PAGE VIEWS 
+//PAGE VIEWS
 app.use((req, res, next) => {
   if(process.env.NODE_ENV!=="development")
     Page_views_model.add_page_view(req)
@@ -177,13 +178,13 @@ app.use((err, req, res, next)=> {
     //PASSPORT
     app.use(passport.initialize())
     app.use(passport.session(session_options))
-  
-  
+
+
 
   app.use('/auth',auth_router)
   app.use('/user', user_router)
-  app.use('/hive', hive_router)
-  
+  app.use('/worker', worker_router)
+  app.use('/proposal', proposal_router)
   // app.use((req, res, next)=>{
   //   logger.log('res.checkBody9')
   //   next()

@@ -11,7 +11,7 @@
       throw new TypeError("Cannot call a class as a function");
   }
   function i(t) {
-    var e = t.getBoundingClientRect(),
+    var e = t.getBoundingWorkerRect(),
       o = {};
     for (var n in e) o[n] = e[n];
     if (t.ownerDocument !== document) {
@@ -70,10 +70,10 @@
         (n.width = document.body.scrollWidth - n.left - n.right),
       "undefined" == typeof n.height &&
         (n.height = document.body.scrollHeight - n.top - n.bottom),
-      (n.top = n.top - o.clientTop),
-      (n.left = n.left - o.clientLeft),
-      (n.right = e.body.clientWidth - n.width - n.left),
-      (n.bottom = e.body.clientHeight - n.height - n.top),
+      (n.top = n.top - o.workerop),
+      (n.left = n.left - o.workerLeft),
+      (n.right = e.body.workerWidth - n.width - n.left),
+      (n.bottom = e.body.workerHeight - n.height - n.top),
       n
     );
   }
@@ -99,7 +99,7 @@
     var o = t.offsetWidth;
     e.style.overflow = "scroll";
     var n = t.offsetWidth;
-    o === n && (n = e.clientWidth), document.body.removeChild(e);
+    o === n && (n = e.workerWidth), document.body.removeChild(e);
     var i = o - n;
     return { width: i, height: i };
   }
@@ -373,7 +373,7 @@
       );
     })();
   x.Utils = {
-    getActualBoundingClientRect: i,
+    getActualBoundingWorkerRect: i,
     getScrollParents: r,
     getBounds: a,
     getOffsetParent: f,
@@ -698,7 +698,7 @@
                   : (t = a(o));
                 var n = getComputedStyle(o),
                   i =
-                    o.scrollWidth > o.clientWidth ||
+                    o.scrollWidth > o.workerWidth ||
                     [n.overflow, n.overflowX].indexOf("scroll") >= 0 ||
                     this.target !== document.body,
                   r = 0;

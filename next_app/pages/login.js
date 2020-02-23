@@ -9,22 +9,23 @@ import * as user_actions from '../redux/actions/user_actions.js'
 import Main_Layout from "../layouts/Main_Layout.js";
 import {ensure_not_loggedin} from '../components/utils/auth.js'
 
-const { login_success, login_attempt} = user_actions; 
+const { login_success, login_attempt} = user_actions;
 
 class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       errors: [],
-      email: "newUser@hive.com",
-      password: "hive",
-      _csrf:props.csrf    
+      email: "111@gg.com",
+      password: "1",
+      confirm_password:'1',
+      _csrf:props.csrf
     };
     this.handle_login = this.handle_login.bind(this)
     this.handle_login_resp = this.handle_login_resp.bind(this)
     this.handle_input = this.handle_input.bind(this)
   }
-  
+
   static async getInitialProps(ctx) {
     let state = ctx.store.getState()
     ensure_not_loggedin(ctx)
@@ -35,15 +36,15 @@ class Login extends React.Component {
 
     }
 
-  
+
     /* Get form input */
     handle_input(input, type) {
       this.setState({ [type]: input });
       // this.props.handle_input(input, type)
-  
+
       // console.log({ input, type });
     }
-  
+
     /* Handle FORM POST SIGNUP */
     async handle_login(data) {
       //TODO start some spinner?
@@ -52,11 +53,11 @@ class Login extends React.Component {
         // console.log(this.props)
         // console.log(this.state)
         const _csrf = this.props.meta.csrf
-        console.log({_csrf})
-  
+        // console.log({_csrf})
+
         const {email, password} = data
         // event.preventDefault();
-        let resp = await fetch('/auth/login', {
+        let resp = await fetch(`/auth/login`, {/* process.env.API_SERVER */
           method:'POST',
           headers: {
             "Content-Type": "application/json",
@@ -70,7 +71,7 @@ class Login extends React.Component {
         console.log('err')
         console.log(err)
       }
-  
+
     }
 
       /* Make a handler for signup resp */
@@ -78,10 +79,10 @@ class Login extends React.Component {
   async handle_login_resp(resp){
     try {
       console.log('handle_login_resp')
-      console.log(resp)
+      // console.log(resp)
       let json = await resp.json()
-      console.log(json)
-  
+      // console.log(json)
+
       if(json.errors &&json.errors.length){
         console.log('WE GOT ERRORS')
         json.errors.map(err => {
@@ -96,21 +97,21 @@ class Login extends React.Component {
         //Push page?
         //Set timeout?  make moce transition//TODO
         toastr.success(`Welcome back ${this.state.email}`, `You are being logged in as ${this.state.email}`)
-        Router.push('/account-profile')
+        Router.push('/account-overview')
         this.props.dispatch(login_success(json.user))
-  
-  
+
+
       }
     } catch (err) {
       console.log('err')
       console.log(err)
     }
   }
-  
+
 
   render() {
-    console.log(this.props)
-    console.log(this)
+    // console.log(this.props)
+    // console.log(this)
     return (
       <Main_Layout className="container">
       <br />
@@ -128,7 +129,7 @@ class Login extends React.Component {
 
         <div className="row mt-5 justify_center">
           <div className="col-md-6 ">
-            <Login_Form 
+            <Login_Form
               csrf={this.props.csrf}
               handle_input={this.handle_input}
               handle_login={this.handle_login}
@@ -149,7 +150,7 @@ class Login extends React.Component {
 }
 function mapStateToProps (state) {
   const { meta } = state
-  return {...state}
+  return state
 }
 export default connect(mapStateToProps)(Login)
 

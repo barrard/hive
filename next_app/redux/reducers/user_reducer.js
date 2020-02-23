@@ -2,8 +2,6 @@
 
 const initial_state = {
   user: {},
-  username: "",
-  password: "",
   is_loggedin:false
 
 };

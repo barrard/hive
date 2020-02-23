@@ -10,8 +10,8 @@ class Login_Form extends React.Component {
     // console.log(props)
     this.state = {
 
-      email: "newUser@hive.com",
-      password: "hive",
+      email: "hive@808.com",
+      password: "808",
       _csrf:props.csrf
     };
   }
@@ -111,13 +111,6 @@ class Login_Form extends React.Component {
             </div>
           </div>
         </form>
-        <p>{this.props.go}</p>
-        <div className="col-sm-12 justify_center">
-          <h3>Other login options</h3>
-        </div>
-        <Social_Buttons />
-
-   
       </div>
     );
   }

@@ -7,22 +7,22 @@ import Signup_form from "../components/forms/Signup_Form.js";
 import Main_Layout from "../layouts/Main_Layout.js";
 import {ensure_not_loggedin} from '../components/utils/auth.js'
 
-const { register_success, register_attempt, set_user} = user_actions; 
+const { register_success, register_attempt, set_user} = user_actions;
 
 class Signup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       errors: [],
-      email: "newUser@hive.com",
-      password: "hive",
-      confirm_password:'hive',
+      email: "",
+      password: "",
+      confirm_password:'',
       csrf:props.meta.csrf
     };
     this.handle_signup = this.handle_signup.bind(this)
     this.handle_signup_resp = this.handle_signup_resp.bind(this)
     this.handle_input = this.handle_input.bind(this)
-    
+
   }
 
   static async getInitialProps(ctx) {
@@ -40,7 +40,9 @@ class Signup extends React.Component {
   /* Get form input */
   handle_input(input, type) {
     this.setState({ [type]: input });
+    // this.props.handle_input(input, type)
 
+    // console.log({ input, type });
   }
 
   /* Handle FORM POST SIGNUP */
@@ -48,7 +50,8 @@ class Signup extends React.Component {
     //TODO start some spinner?
     this.props.dispatch(register_attempt(data))
     try {
-     
+      // console.log(this.props)
+      // console.log(this.state)
       const _csrf = this.props.meta.csrf
 
       const {email, password, confirm_password} = data
@@ -87,10 +90,10 @@ class Signup extends React.Component {
         //TODO notify login
         //Push page?
         this.props.dispatch(set_user(json.user));
-  
+
         toastr.success('New User', `You are being logged in as ${this.state.email}`)
-        Router.push('/account-profile')
-  
+        Router.push('/account-overview')
+
       }
     } catch (err) {
       console.log('err')
@@ -113,12 +116,6 @@ class Signup extends React.Component {
             <div className="col-md-6 offset-md-3">
               <br />
               <h1>Signup</h1>
-              <p className="lead mb-1">
-                Strat today!
-                <br />
-                Share with friends!
-              </p>
-
             </div>
           </div>
 
@@ -127,16 +124,8 @@ class Signup extends React.Component {
               <Signup_form
                 handle_input={this.handle_input}
                 handle_signup={this.handle_signup}
-                csrf={this.props.meta.csrf} 
+                csrf={this.props.meta.csrf}
               />
-
-              <div className="row mt-5">
-                <div className="offset-sm-2 col-sm-8">
-                  <h3 className="action">
-                    Try us - <b className="embolden">it's free</b>.
-                  </h3>
-                </div>
-              </div>
             </div>
           </div>
         </div>

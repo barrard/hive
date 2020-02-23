@@ -116,7 +116,7 @@
     return ee(
       t["offset" + e],
       t["scroll" + e],
-      o["client" + e],
+      o["worker" + e],
       o["offset" + e],
       o["scroll" + e],
       r(10)
@@ -139,11 +139,11 @@
     var o = {};
     try {
       if (r(10)) {
-        o = e.getBoundingClientRect();
+        o = e.getBoundingWorkerRect();
         var n = l(e, "top"),
           i = l(e, "left");
         (o.top += n), (o.left += i), (o.bottom += n), (o.right += i);
-      } else o = e.getBoundingClientRect();
+      } else o = e.getBoundingWorkerRect();
     } catch (t) {}
     var p = {
         left: o.left,
@@ -152,8 +152,8 @@
         height: o.bottom - o.top
       },
       s = "HTML" === e.nodeName ? c(e.ownerDocument) : {},
-      d = s.width || e.clientWidth || p.right - p.left,
-      a = s.height || e.clientHeight || p.bottom - p.top,
+      d = s.width || e.workerWidth || p.right - p.left,
+      a = s.height || e.workerHeight || p.bottom - p.top,
       f = e.offsetWidth - d,
       h = e.offsetHeight - a;
     if (f || h) {
@@ -199,8 +199,8 @@
     var t = 1 < arguments.length && void 0 !== arguments[1] && arguments[1],
       o = e.ownerDocument.documentElement,
       n = b(e, o),
-      i = ee(o.clientWidth, window.innerWidth || 0),
-      r = ee(o.clientHeight, window.innerHeight || 0),
+      i = ee(o.workerWidth, window.innerWidth || 0),
+      r = ee(o.workerHeight, window.innerHeight || 0),
       p = t ? 0 : l(o),
       s = t ? 0 : l(o, "left"),
       d = {
@@ -283,7 +283,7 @@
       a = d.filter(function(e) {
         var t = e.width,
           n = e.height;
-        return t >= o.clientWidth && n >= o.clientHeight;
+        return t >= o.workerWidth && n >= o.workerHeight;
       }),
       l = 0 < a.length ? a[0].key : d[0].key,
       f = e.split("-")[1];
@@ -574,8 +574,8 @@
       return (
         (a =
           "vh" === p
-            ? ee(document.documentElement.clientHeight, window.innerHeight || 0)
-            : ee(document.documentElement.clientWidth, window.innerWidth || 0)),
+            ? ee(document.documentElement.workerHeight, window.innerHeight || 0)
+            : ee(document.documentElement.workerWidth, window.innerWidth || 0)),
         (a / 100) * r
       );
     }
@@ -1130,13 +1130,13 @@
               ((d =
                 "bottom" == c
                   ? "HTML" === l.nodeName
-                    ? -l.clientHeight + h.bottom
+                    ? -l.workerHeight + h.bottom
                     : -f.height + h.bottom
                   : h.top),
               (s =
                 "right" == g
                   ? "HTML" === l.nodeName
-                    ? -l.clientWidth + h.right
+                    ? -l.workerWidth + h.right
                     : -f.width + h.right
                   : h.left),
               a && b)

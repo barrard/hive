@@ -11,9 +11,19 @@ class Landing_Page extends React.Component{
     this.state={}
   }
   render(){
+    let is_loggedin = this.props.user.is_loggedin;
+    console.log('this.props')
+
+console.log(this.props)
     return(
       <Main_Layout>
-      LANDING
+        {is_loggedin &&
+  <p>Hello {this.props.user.user.primary_email} </p>
+        }
+        {!is_loggedin &&
+      <p>Please login</p>
+
+        }
       </Main_Layout>
     )
   }
@@ -21,8 +31,8 @@ class Landing_Page extends React.Component{
 
 
 function mapStateToProps(state) {
-  // const { user, csrf, locals, crowdsales, two_factor_auth } = state;
-  return {  };
+  const { user } = state;
+  return { user };
 }
 
 
