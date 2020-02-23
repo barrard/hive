@@ -7,7 +7,7 @@
     "dev": "nodemon ./server/next_server.js",
     "build": "next build ./next_app",
     "export": "next export ./next_app",
-    "start": "next start ./next_app"
+    "start": "node ./server/next_server.js"
   },
   "author": "",
   "license": "ISC",
