@@ -5,8 +5,10 @@ const passport = require("passport");
 
 class Auth_Controller {
   async sign_up(req, res, next) {
-    const { email, password, confirm_password } = req.body;
+    const { email, password, confirm_password, _csrf } = req.body;
+
     logger.log({
+      _csrf,
       email,
       password,
       confirm_password
