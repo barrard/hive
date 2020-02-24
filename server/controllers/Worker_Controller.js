@@ -26,7 +26,7 @@ module.exports.update_worker = async (req, res, next) => {
     try {
       update_worker = validate_new_worker(updated_worker)
       if(!update_worker)throw 'Invalid worker data'
-      logger.log(`Find this id ${req.params.worker_id}`)
+      logger.log(`Find and update this id ${req.params.worker_id}`)
       let worker = await Worker.findOneAndUpdate({
         _id: req.params.worker_id}, {...updated_worker}, {
           new:true

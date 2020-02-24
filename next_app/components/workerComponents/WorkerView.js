@@ -9,6 +9,8 @@ const Worker_Details_View = ({ worker, csrf, updatedWorker }) => {
   let [tmp_worker_data, set_tmp_worker_data] = useState({});
   if (!worker || !worker.firstname) return <p>Select a worker.</p>;
 
+  console.log({ tmp_worker_data: tmp_worker_data.services });
+
   const Edit_Buttons = ({ worker, set_edit, edit_mode }) => {
     /* return save or cancel buttons */
     return (
@@ -21,10 +23,9 @@ const Worker_Details_View = ({ worker, csrf, updatedWorker }) => {
                 set_is_loading(true);
                 let worker = await API.save_worker(tmp_worker_data, csrf);
                 setTimeout(() => {
-                  updatedWorker(worker)
+                  updatedWorker(worker);
                   set_edit(!edit_mode);
                   set_is_loading(false);
-
                 }, 500);
               }}
               is_loading={is_loading}
@@ -95,6 +96,12 @@ const Worker_Details_View = ({ worker, csrf, updatedWorker }) => {
           worker={worker}
           tmp_worker_data={tmp_worker_data}
         />
+        <Worker_Services
+          edit_tmp_worker={edit_tmp_worker}
+          mode={edit_mode}
+          worker={worker}
+          tmp_worker_data={tmp_worker_data}
+        />
       </View_Container>
     </>
   );
@@ -103,12 +110,56 @@ const Worker_Details_View = ({ worker, csrf, updatedWorker }) => {
 export default Worker_Details_View;
 
 /* Components */
+const TextArea = ({ name, value, handle_input, required, hint }) => (
+  <>
+    <textarea
+      onChange={event => handle_input(event.target.value.split(","), name)}
+      value={value}
+      className="form-control"
+      required={required}
+    />
+    {hint && <HintSpan>{hint}</HintSpan>}
+  </>
+);
+
+const HintSpan = styled.span`
+  font-size: 12px;
+`;
+
+const Worker_Services = ({
+  worker,
+  mode,
+  edit_tmp_worker,
+  tmp_worker_data
+}) => {
+  if (mode) {
+    return (
+      <div className="col-6">
+        <span>Services</span>
+        <TextArea
+          handle_input={edit_tmp_worker}
+          name="services"
+          value={tmp_worker_data.services.join(",")}
+          hint="Comma, seperated, list, of, services"
+        />
+      </div>
+    );
+  } else {
+    return (
+      <div className="col-6">
+        <span>Services</span>
+        {worker.services.map(service => (
+          <div key={service}>{service}</div>
+        ))}
+      </div>
+    );
+  }
+};
 
 const Worker_Contact = ({ worker, mode, edit_tmp_worker, tmp_worker_data }) => {
   if (mode) {
     return (
       <div className="col-6">
-
         <Input
           handle_input={edit_tmp_worker}
           type="email"
@@ -117,7 +168,7 @@ const Worker_Contact = ({ worker, mode, edit_tmp_worker, tmp_worker_data }) => {
         />
         <Input
           handle_input={edit_tmp_worker}
-          type="phone"
+          type="number"
           name="phone"
           value={tmp_worker_data.phone}
         />
@@ -139,7 +190,6 @@ const Worker_Name = ({ worker, mode, edit_tmp_worker, tmp_worker_data }) => {
   if (mode) {
     return (
       <div className="col-6">
-
         <Input
           handle_input={edit_tmp_worker}
           type="text"
@@ -166,7 +216,7 @@ const Worker_Address = ({ worker, mode, edit_tmp_worker, tmp_worker_data }) => {
   if (mode) {
     return (
       <div className="col-6">
-      {/* street */}
+        {/* street */}
         <Input
           handle_input={edit_tmp_worker}
           type="text"
@@ -187,7 +237,8 @@ const Worker_Address = ({ worker, mode, edit_tmp_worker, tmp_worker_data }) => {
           name="zip"
           value={tmp_worker_data.zip}
         />
-</div>    );
+      </div>
+    );
   }
   return (
     <>

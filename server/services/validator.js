@@ -23,11 +23,22 @@ function validate_new_worker(worker) {
   logger.log("validate_new_worker");
   for (let key in worker) {
     try {
+      logger.log({key, val:worker[key]})
       let val = worker[key].trim();
     if (val === "") {
-      console.log(`${key} is blank`);
+      logger.log(`${key} is blank`);
       return false
     }
+      /*
+  slice the services
+  */
+ if(!Array.isArray(worker.services) && worker.services.length){
+
+  let services = worker.services.split(",");
+  services = services.map(service => service.trim());
+  services = services.filter(service => service !== "");
+  worker.services = services;
+ }
     worker[key] = val;
     } catch (err) {
       logger.log('err'.bgRed)
@@ -36,15 +47,6 @@ function validate_new_worker(worker) {
   }
   logger.log({worker})
 
-  /*
-  slice the services
-  */
- if(worker.services.length){
 
-   let services = worker.services.split(",");
-   services = services.map(service => service.trim());
-   services = services.filter(service => service !== "");
-   worker.services = services;
-  }
   return worker;
 }
