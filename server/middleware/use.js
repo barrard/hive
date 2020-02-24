@@ -60,9 +60,9 @@ app.use(express_validator(
     }
   };
   if (process.env.NODE_ENV == "production"){
-    logger.log('SECURE COOKIE....not :(')
+    logger.log('SECURE COOKIE')
     console.log({SESSION_SECRET:process.env.SESSION_SECRET})
-    // session_options.cookie.secure = true;
+    session_options.cookie.secure = true;
   }
 
 
